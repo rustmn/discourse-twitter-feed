@@ -17,11 +17,11 @@ function parseSetup(raw) {
   console.log('raw: ', raw);
 
   raw.split('|').forEach(item => {
-    [path, screenName] = item.split(':').map(str => str.trim());
+    [pathName, screenName] = item.split(':').map(str => str.trim());
     
-    if (!path) return;
+    if (!pathName) return;
 
-    parsed[path] = screenName;
+    parsed[pathName] = screenName;
   });
   console.log('parsed: ', parsed);
   return parsed;
