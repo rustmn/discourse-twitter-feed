@@ -1,5 +1,8 @@
 #sidebar {
   flex: 0 1 40%;
+  @media (max-width: 900px) {
+    display: none;
+  }
 }
 
 #twitter-sidebar {
