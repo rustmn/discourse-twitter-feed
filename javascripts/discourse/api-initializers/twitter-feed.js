@@ -14,18 +14,16 @@ const config = {
 
 function parseSetup(raw) {
   const parsed = {};
-  console.log('raw: ', raw);
 
   raw.split('|').forEach(item => {
+    const [path, screenName] = item.split(':').map(str => str.trim());
 
-    values = item.split(':').map(str => str.trim());
-    if (!values.length || value.length > 2) {
+    if (!path || !screenName) {
       throw 'Incorrect settings recieved';
     }
     
-    parsed[values[0]] = values[1];
+    parsed[path] = screenName;
   });
-  console.log('parsed: ', parsed);
   return parsed;
 }
 
