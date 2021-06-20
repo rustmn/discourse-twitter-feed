@@ -2,14 +2,20 @@ import { apiInitializer } from "discourse/lib/api";
 
 const config = {
   sidebar_container: 'twitter-sidebar',
+  sidebar_mainpage_container: 'latest-topic-list'
 };
 
-const paths_to_twitter_screenNames_relations = {
-  '/': 'layer5',
-  'meshery': 'mesheryio',
-  'smp': 'smp_spec',
-  'getnighthawk': 'smp_spec'
-};
+function parseSetup(raw) {
+  const parsed = {};
+  console.log('raw: ', raw);
+
+  raw.split('|').forEach(item => {
+    [path, screenName] = item.split(':').map(str => str.trim());
+    parsed[path] = screenName;
+  });
+  console.log('parsed: ', parsed);
+  return parsed;
+}
 
 function insertTimeline(screenName) {
   let twitterSidebar = document.getElementById(config.sidebar_container);
@@ -49,14 +55,14 @@ function insertTimeline(screenName) {
   }
 }
 
-function parsePath(doc_path) {
+function parsePath(doc_path, paths_relations) {
   let response = 'layer5';
 
-  Object.keys(paths_to_twitter_screenNames_relations)
+  Object.keys(paths_relations)
     .forEach(path => {
       
       if (doc_path.includes(path)) {
-        response = paths_to_twitter_screenNames_relations[path];
+        response = paths_relations[path];
       }
     });
 
@@ -68,9 +74,11 @@ export default apiInitializer("0.11.1", api => {
     tagName: `div#${config.sidebar_container}`,
 
     init() {
+      const paths_relations = parseSetup(settings.paths_relations);
+
       api.onPageChange(url => {
         insertTimeline(
-          parsePath(url)
+          parsePath(url, paths_relations)
         );
       });
     },
