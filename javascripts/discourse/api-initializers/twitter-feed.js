@@ -5,17 +5,36 @@ const config = {
   sidebar_mainpage_container: 'latest-topic-list'
 };
 
+/**
+ * 
+ * @param {string} raw string, that contains settings from user input
+ * @returns {object} settings
+ * 
+ */
+
 function parseSetup(raw) {
   const parsed = {};
   console.log('raw: ', raw);
 
   raw.split('|').forEach(item => {
     [path, screenName] = item.split(':').map(str => str.trim());
+    
+    if (!path) return;
+
     parsed[path] = screenName;
   });
   console.log('parsed: ', parsed);
   return parsed;
 }
+
+/**
+ * 
+ * @param {string} screenName Twitter screenName e.g. - aoc 
+ * 
+ * This function search in the DOM for sidebar and
+ * creates Twitter timeline
+ * 
+ */
 
 function insertTimeline(screenName) {
   let twitterSidebar = document.getElementById(config.sidebar_container);
@@ -55,6 +74,14 @@ function insertTimeline(screenName) {
   }
 }
 
+/**
+ * 
+ * @param {string} doc_path current URL (pathname)
+ * @param {object} paths_relations object that contains settings (path: screenName)
+ * @returns {string} screenName, that should be used to render timeline
+ * 
+ */
+
 function parsePath(doc_path, paths_relations) {
   let response = 'layer5';
 
@@ -69,6 +96,12 @@ function parsePath(doc_path, paths_relations) {
   return response;
 }
 
+/**
+ * 
+ * Discourse plugin API initializer
+ * 
+ */
+
 export default apiInitializer("0.11.1", api => {
   api.createWidget('twitter-widget', {
     tagName: `div#${config.sidebar_container}`,
@@ -76,6 +109,12 @@ export default apiInitializer("0.11.1", api => {
     init() {
       const paths_relations = parseSetup(settings.paths_relations);
 
+      /**
+       * 
+       * api.onPageChange will be fired after every page refresh / route change
+       * after the DOM will be ready
+       * 
+       */
       api.onPageChange(url => {
         insertTimeline(
           parsePath(url, paths_relations)

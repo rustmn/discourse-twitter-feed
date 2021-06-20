@@ -2,6 +2,12 @@
 
 This theme component creates a Twitter timeline and renders it in the sidebar based on the current URL (different timelines for different paths).
 
+Extends this templates:
+
+* components/categories-and-latest-topics
+
+* components/topic-list
+
 ## How to use this component? 
 
 * Set the relations between paths and screen names
