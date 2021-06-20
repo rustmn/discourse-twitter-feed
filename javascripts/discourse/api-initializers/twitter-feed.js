@@ -17,11 +17,13 @@ function parseSetup(raw) {
   console.log('raw: ', raw);
 
   raw.split('|').forEach(item => {
-    [pathName, screenName] = item.split(':').map(str => str.trim());
-    
-    if (!pathName) return;
 
-    parsed[pathName] = screenName;
+    values = item.split(':').map(str => str.trim());
+    if (!values.length || value.length > 2) {
+      throw 'Incorrect settings recieved';
+    }
+    
+    parsed[values[0]] = values[1];
   });
   console.log('parsed: ', parsed);
   return parsed;
